@@ -56,4 +56,7 @@ public class BaseAttrInfo implements Serializable{
     public void setCatalog3Id(String catalog3Id) {
         this.catalog3Id = catalog3Id;
     }
+
+
+    
 }
