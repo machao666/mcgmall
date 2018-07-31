@@ -7,6 +7,7 @@
       <module fileurl="file://$PROJECT_DIR$/gmall-bean/gmall-bean.iml" filepath="$PROJECT_DIR$/gmall-bean/gmall-bean.iml" />
       <module fileurl="file://$PROJECT_DIR$/gmall-common-util/gmall-common-util.iml" filepath="$PROJECT_DIR$/gmall-common-util/gmall-common-util.iml" />
       <module fileurl="file://$PROJECT_DIR$/gmall-interface/gmall-interface.iml" filepath="$PROJECT_DIR$/gmall-interface/gmall-interface.iml" />
+      <module fileurl="file://$PROJECT_DIR$/gmall-item-web/gmall-item-web.iml" filepath="$PROJECT_DIR$/gmall-item-web/gmall-item-web.iml" />
       <module fileurl="file://$PROJECT_DIR$/gmall-manager-service/gmall-manager-service.iml" filepath="$PROJECT_DIR$/gmall-manager-service/gmall-manager-service.iml" />
       <module fileurl="file://$PROJECT_DIR$/gmall-manager-web/gmall-manager-web.iml" filepath="$PROJECT_DIR$/gmall-manager-web/gmall-manager-web.iml" />
       <module fileurl="file://$PROJECT_DIR$/gmall-order-web/gmall-order-web.iml" filepath="$PROJECT_DIR$/gmall-order-web/gmall-order-web.iml" />
