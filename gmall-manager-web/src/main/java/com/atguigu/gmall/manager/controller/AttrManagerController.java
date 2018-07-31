@@ -39,7 +39,7 @@ public class AttrManagerController {
     @RequestMapping("/getAttrInfo")
     @ResponseBody
     public List<BaseAttrInfo> getBaseAttrInfo(String catalog3Id) {
-        return managerService.getBaseAttrInfo(catalog3Id);
+        return managerService.attrInfoList(catalog3Id);
     }
 
     @RequestMapping("/saveAttrInfo")

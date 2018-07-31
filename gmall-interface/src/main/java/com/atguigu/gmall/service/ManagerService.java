@@ -20,5 +20,26 @@ public interface ManagerService {
 
     void delectAttrInfo(String attrId);
 
+    List<BaseSaleAttr> getBaseSaleAttr();
+
     List<SpuInfo> getSpuInfoAttr(String catalog3Id);
+
+    void saveSpuInfo(SpuInfo spuInfo);
+
+    List<SpuInfo> getSpuInfo(String spuId);
+
+    List<SpuImage> getSpuImageList(String spuId);
+
+
+    List<BaseAttrInfo> attrInfoList(String catalog3Id);
+
+    List<SpuSaleAttr> getSpuSaleAttr(String spuId);
+
+    void saveSkuInfo(SkuInfo skuInfo);
+
+    SkuInfo getSkuInfo(String skuId);
+
+    List<SpuSaleAttr> selectSpuSaleAttrListCheckBySku(SkuInfo skuInfo);
+
+    List<SkuSaleAttrValue> getSkuSaleAttrValueListBySpu(String spuId);
 }

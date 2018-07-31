@@ -15,4 +15,5 @@ public class ManagerController {
     public String getAttrListPage(){
         return "attrListPage";
     }
+
 }
