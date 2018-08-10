@@ -68,37 +68,34 @@
 
 <div th:include="skuInfoPage"></div>
 
-<!--<div th:include="skuListPage"></div>-->
+<div th:include="skuListPage"></div>
 
 </body>
 <script type="text/javascript">
-   /* function editSpuInfo(){
+    function editSpuInfo(){
 
         var spuInfo = $('#spulist_dg').datagrid('getSelected')
 
+        console.log('spuInfo:'+JSON.stringify(spuInfo));
         initSpuInfoDlg(spuInfo);
-        //获取商品信息数据
 
 
-      $("#description").textbox("setValue",spuInfo.description);
-        $("#spuName").textbox("setValue",spuInfo.spuName);
-        $("#spuId").val(spuInfo.id);
-
-        //获取图片信息
-        var spuImageList = $('#spulist_dg').datagrid({url:'getSpuImageList?spuId='+spuInfo.id});
-
-
-
-
-
-        //获取
-
-
-    }*/
+    }
    function addSkuInfo() {
        var spuRow = $('#spulist_dg').datagrid('getSelected');
        var ctg3val=$("#ctg3ForSpuList").combobox('getValue');
        initSkuInfoDlg(spuRow.id,'',ctg3val);//在skuInfoPage.html中
+
+   }
+
+   function showSkuInfoList(){
+       var spuRow = $('#spulist_dg').datagrid('getSelected');
+       var ctg3val=$("#ctg3ForSpuList").combobox('getValue');
+
+       if(!spuRow){
+           $.messager.alert('警告','请先选择spu','warning');
+       }
+       initSkuListDlg(spuRow.id,ctg3val);
 
    }
 </script>

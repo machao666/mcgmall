@@ -22,4 +22,5 @@ public class UserInfoController {
         return userInfoService.getAllUserInfo();
     }
 
+
 }
