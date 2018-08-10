@@ -31,4 +31,12 @@ public class SkuManagerController {
 
         managerService.saveSkuInfo(skuInfo);
     }
+
+    @ResponseBody
+    @RequestMapping("skuInfoListBySpu")
+    public List<SkuInfo> getSkuInfoListBySpu(String spuId){
+        List<SkuInfo> skuInfoListBySpu = managerService.getSkuInfoListBySpu(spuId);
+
+        return skuInfoListBySpu;
+    }
 }

@@ -1,5 +1,8 @@
 package com.atguigu.gmall.gmalllistservice;
 
+import com.atguigu.gmall.bean.SkuLsParams;
+import com.atguigu.gmall.bean.SkuLsResult;
+import com.atguigu.gmall.service.ListService;
 import io.searchbox.client.JestClient;
 import io.searchbox.core.Search;
 import io.searchbox.core.SearchResult;
@@ -18,10 +21,13 @@ import java.util.List;
 public class GmallListServiceApplicationTests {
 	@Autowired
 	private JestClient jestClient;
+
+	@Autowired
+	private ListService listService;
 	@Test
 	public void contextLoads() {
 	}
-	@Test
+	/*@Test
 	public void testEls() throws IOException {
 		String query = "{\n" +
 				"  \"query\": {\n" +
@@ -43,4 +49,25 @@ public class GmallListServiceApplicationTests {
 			System.out.println(source.get("name"));
 		}
 	}
+	@Test
+	public void testSearh(){
+
+		SkuLsParams skuLsParams = new SkuLsParams();
+
+		skuLsParams.setCatalog3Id("61");
+
+		skuLsParams.setPageNo(1);
+
+		skuLsParams.setPageSize(1);
+
+		skuLsParams.setValueId(new String[]{"13"});
+
+		skuLsParams.setKeyword("一加");
+
+		SkuLsResult search = listService.getSearch(skuLsParams);
+
+		System.out.println(search.toString());
+
+	}*/
 }
+

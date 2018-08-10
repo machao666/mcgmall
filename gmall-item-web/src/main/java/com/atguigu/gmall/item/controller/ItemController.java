@@ -5,7 +5,9 @@ import com.alibaba.fastjson.JSON;
 import com.atguigu.gmall.bean.SkuInfo;
 import com.atguigu.gmall.bean.SkuSaleAttrValue;
 import com.atguigu.gmall.bean.SpuSaleAttr;
+import com.atguigu.gmall.service.ListService;
 import com.atguigu.gmall.service.ManagerService;
+import com.atguigu.gmall.util.annotation.LoginRequire;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -18,9 +20,13 @@ import java.util.List;
 public class ItemController {
 
     @Reference
+    ListService listService;
+    @Reference
     ManagerService managerService;
 
+
     @RequestMapping("{skuId}.html")
+
     public String index(@PathVariable(value = "skuId")String skuId, HttpServletRequest request){
 
         SkuInfo skuInfo = managerService.getSkuInfo(skuId);
@@ -46,6 +52,8 @@ public class ItemController {
                 skuJson = "";
             }
         }
+
+        listService.incrHotScore(skuId);
 
         String skuJsonString = JSON.toJSONString(skuMap);
 

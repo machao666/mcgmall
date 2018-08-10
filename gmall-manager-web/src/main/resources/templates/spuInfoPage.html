@@ -84,11 +84,15 @@
     /*清空表单*/
     function initSpuForm(spuInfo){
         //清空文本框
-        $("#spuForm").form("clear");
+            $("#spuForm").form("clear");
 
+            $("#spuName").textbox('setValue',spuInfo.spuName);
+
+            $("#description").textbox('setValue',spuInfo.description);
     }
     /*初始化图片表格*/
     function initSpuImgListDatagrid(spuInfo) {
+
         /*加载旧数据*/
         $('#spuImgDg').datagrid('loadData', {total: 0, rows: []});
         console.log("初始化表格");
@@ -137,7 +141,9 @@
                     }
                 }
             ]],
+
             onDblClickRow: function (rowIndex, rowData) {
+
                 //双击开启编辑行
                 spuImgDg.datagrid("beginEdit", rowIndex);
                 //设定当失去焦点时,退出编辑状态
@@ -230,7 +236,14 @@
 
     /*初始化销售属性控件*/
     function initSpuSaleAttrListDatagrid(spuInfo){
+
         var spuSaleAttrDg =$('#spuSaleAttrDg').datagrid('loadData', { total: 0, rows: [] });
+
+/*        for (var i = 0;  i< spuInfo.spuSaleAttrList.size; i++) {
+            var spuSaleAttr = spuInfo.spuSaleAttrList[i];
+            var spuSaleAttrDg =$('#spuSaleAttrDg').datagrid('loadData', {total:4 ,rows: [{id:""},{saleAttrId:spuSaleAttr.saleAttrId},{saleAttrName:spuSaleAttr.saleAttrName},{spuSaleAttrValueJson:spuSaleAttrValueList}]});
+        }*/
+
         spuSaleAttrDg.datagrid({
             idField: 'saleAttrId', // 主键
             columns:[[
@@ -285,8 +298,11 @@
             $("#spu_dlg").dialog("close")
             // 从新加载数据
             $("#spulist_dg").datagrid("reload")
+
         })
     }
+
+
 </script>
 </body>
 </html>

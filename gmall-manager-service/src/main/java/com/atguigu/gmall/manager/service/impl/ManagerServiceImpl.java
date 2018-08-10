@@ -1,15 +1,21 @@
 package com.atguigu.gmall.manager.service.impl;
 
 import com.alibaba.dubbo.config.annotation.Service;
+import com.alibaba.fastjson.JSON;
 import com.atguigu.gmall.bean.*;
+import com.atguigu.gmall.config.RedisUtil;
+import com.atguigu.gmall.manager.constant.ManagerConst;
 import com.atguigu.gmall.manager.mapper.*;
 import com.atguigu.gmall.service.ManagerService;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import redis.clients.jedis.Jedis;
 import tk.mybatis.mapper.entity.Example;
 
 import java.util.List;
 
 @Service
+
 public class ManagerServiceImpl implements ManagerService {
     @Autowired
     BaseCatalog1Mapper baseCatalog1Mapper;
@@ -39,6 +45,8 @@ public class ManagerServiceImpl implements ManagerService {
     SkuAttrValueMapper skuAttrValueMapper;
     @Autowired
     SkuSaleAttrValueMapper skuSaleAttrValueMapper;
+    @Autowired
+    RedisUtil redisUtil;
 
     @Override
     public List<BaseCatalog1> getBaseCatalog1() {
@@ -128,13 +136,35 @@ public class ManagerServiceImpl implements ManagerService {
 
     @Override
     public List<SpuInfo> getSpuInfoAttr(String catalog3Id) {
-        SpuInfo spuInfo = new SpuInfo();
+        SpuInfo spuInfoBy3Id = new SpuInfo();
 
-        spuInfo.setCatalog3Id(catalog3Id);
+        spuInfoBy3Id.setCatalog3Id(catalog3Id);
 
-        List<SpuInfo> infoList = spuInfoMapper.select(spuInfo);
+        List<SpuInfo> spuInfoList = spuInfoMapper.select(spuInfoBy3Id);
 
-        return infoList;
+        if(spuInfoList!=null&&spuInfoList.size()>0){
+            for (SpuInfo spuInfo : spuInfoList) {
+                SpuImage spuImage = new SpuImage();
+
+                spuImage.setSpuId(spuInfo.getId());
+
+                List<SpuImage> imageList = spuImageMapper.select(spuImage);
+
+                spuInfo.setSpuImageList(imageList);
+
+                SpuSaleAttr spuSaleAttr = new SpuSaleAttr();
+
+                spuSaleAttr.setSpuId(spuInfo.getId());
+
+                List<SpuSaleAttr> spuSaleAttrList = spuSaleAttrMapper.selectSpuSaleAttrList(spuInfo.getId());
+
+                spuInfo.setSpuSaleAttrList(spuSaleAttrList);
+
+
+
+            }
+        }
+        return spuInfoList;
     }
 
     @Override
@@ -283,6 +313,30 @@ public class ManagerServiceImpl implements ManagerService {
 
     @Override
     public SkuInfo getSkuInfo(String skuId) {
+
+        Jedis jedis = redisUtil.getJedis();
+
+        SkuInfo skuInfo = null;
+
+        String skuInfoKey = ManagerConst.SKUKEY_PREFIX + skuId + ManagerConst.SKUKEY_SUFFIX;
+
+        if(jedis.exists(skuInfoKey)){
+            String skuInfoJson = jedis.get(skuInfoKey);
+            if(skuInfoJson!=null&& !"".equals(skuInfoJson)){
+               skuInfo =  JSON.parseObject(skuInfoJson,SkuInfo.class);
+            }
+        }else{
+           skuInfo =  getSkuInfoMethod(skuId);
+
+           String skuInfoStr = JSON.toJSONString(skuInfo);
+
+           jedis.setex(skuInfoKey,ManagerConst.SKUKEY_TIMEOUT,skuInfoStr);
+        }
+        jedis.close();
+        return skuInfo;
+    }
+
+    private SkuInfo getSkuInfoMethod(String skuId) {
         SkuInfo skuInfo = skuInfoMapper.selectByPrimaryKey(skuId);
 
         SkuImage skuImage = new SkuImage();
@@ -292,6 +346,18 @@ public class ManagerServiceImpl implements ManagerService {
         List<SkuImage> imageList = skuImageMapper.select(skuImage);
 
         skuInfo.setSkuImageList(imageList);
+
+        SkuAttrValue skuAttrValue = new SkuAttrValue();
+        skuAttrValue.setSkuId(skuInfo.getId());
+        List<SkuAttrValue> attrValueList = skuAttrValueMapper.select(skuAttrValue);
+
+        skuInfo.setSkuAttrValueList(attrValueList);
+
+        SkuSaleAttrValue skuSaleAttrValue = new SkuSaleAttrValue();
+        skuSaleAttrValue.setSkuId(skuInfo.getId());
+        List<SkuSaleAttrValue> saleAttrValueList = skuSaleAttrValueMapper.select(skuSaleAttrValue);
+
+        skuInfo.setSkuSaleAttrValueList(saleAttrValueList);
         return skuInfo;
     }
 
@@ -308,5 +374,48 @@ public class ManagerServiceImpl implements ManagerService {
         return saleAttrValueList;
     }
 
+    @Override
+    public List<SkuInfo> getSkuInfoListBySpu(String spuId) {
+        SkuInfo skuInfoBySpuId = new SkuInfo();
+        skuInfoBySpuId.setSpuId(spuId);
+        List<SkuInfo> skuInfos = skuInfoMapper.select(skuInfoBySpuId);
 
+        if(skuInfos==null||skuInfos.size()==0){
+            return null;
+        }else{
+            for (SkuInfo skuInfo : skuInfos) {
+                SkuImage skuImage = new SkuImage();
+
+                skuImage.setSkuId(skuInfo.getId());
+
+                List<SkuImage> skuImages = skuImageMapper.select(skuImage);
+
+                skuInfo.setSkuImageList(skuImages);
+
+                SkuAttrValue skuAttrValue = new SkuAttrValue();
+
+                skuAttrValue.setSkuId(skuInfo.getId());
+
+                List<SkuAttrValue> skuAttrValues = skuAttrValueMapper.select(skuAttrValue);
+
+                skuInfo.setSkuAttrValueList(skuAttrValues);
+
+                SkuSaleAttrValue skuSaleAttrValue = new SkuSaleAttrValue();
+
+                skuSaleAttrValue.setSkuId(skuInfo.getId());
+
+                List<SkuSaleAttrValue> skuSaleAttrValues = skuSaleAttrValueMapper.select(skuSaleAttrValue);
+
+                skuInfo.setSkuSaleAttrValueList(skuSaleAttrValues);
+            }
+            return skuInfos;
+        }
+    }
+
+    @Override
+    public List<BaseAttrInfo> getBaseAttrInfo(List<String> attrValueIdList) {
+        String attrValueIds = StringUtils.join(attrValueIdList, ",");
+
+        return   baseAttrInfoMapper.getBaseAttrInfoListByValueIdList(attrValueIds);
+    }
 }

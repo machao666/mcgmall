@@ -22,3 +22,4 @@ public class UserAddressServiceImpl implements UserAddressService {
         return userAddressMapper.select(userAddress);
     }
 }
+
