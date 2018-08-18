@@ -93,8 +93,12 @@ public class PaymentController {
         } catch (AlipayApiException e) {
             e.printStackTrace();
         }
+
+        orderService.sendDelayPaymentResult(paymentInfo.getOutTradeNo(),10,3);
         response.setContentType("text/html;charset=UTF-8");
+
         return form;
+
     }
 
     @RequestMapping(value = "alipay/callback/return",method = RequestMethod.GET)
@@ -102,7 +106,7 @@ public class PaymentController {
         return "redirect://"+AlipayConfig.return_order_url;
     }
 
-    @RequestMapping(value = "alipay/callback/return",method = RequestMethod.POST)
+    @RequestMapping(value = "alipay/callback/notify",method = RequestMethod.POST)
     @ResponseBody
     public String paymentNotify(@RequestParam Map<String,String> paramMap,HttpServletRequest request){
         String sign = request.getParameter("sign");
@@ -138,6 +142,8 @@ public class PaymentController {
 
                     paymentService.updatePaymentInfo(out_trade_no,paymentInfoUpd);
 
+                    sendPaymentResult(paymentInfoUpd,"success");
+
                     return "success";
                 }
             }
@@ -147,5 +153,23 @@ public class PaymentController {
 
         return "fail";
     }
+    @RequestMapping("sendPaymentResult")
+    @ResponseBody
+    public String sendPaymentResult(PaymentInfo paymentInfo,@RequestParam("result") String result) {
+        paymentService.sendPaymentResult(paymentInfo, result);
+        return "sent payment result";
+    }
+/*    @RequestMapping("queryPaymentResult")
+    @ResponseBody
+    public String queryPaymentResult(HttpServletRequest request){
+        String orderId = request.getParameter("orderId");
 
+        PaymentInfo paymentInfoQuery = new PaymentInfo();
+
+        paymentInfoQuery.setOrderId(orderId);
+
+        boolean flag = paymentService.checkPayment(paymentInfoQuery);
+
+        return ""+flag;
+    }*/
 }

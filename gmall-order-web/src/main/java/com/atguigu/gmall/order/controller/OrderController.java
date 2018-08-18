@@ -1,6 +1,7 @@
 package com.atguigu.gmall.order.controller;
 
 import com.alibaba.dubbo.config.annotation.Reference;
+import com.alibaba.fastjson.JSON;
 import com.atguigu.gmall.bean.CartInfo;
 import com.atguigu.gmall.bean.OrderDetail;
 import com.atguigu.gmall.bean.OrderInfo;
@@ -19,6 +20,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 @Controller
 public class OrderController {
@@ -129,5 +131,23 @@ public class OrderController {
     @RequestMapping("list")
     public String list(){
         return "list";
+    }
+    @RequestMapping("orderSplit")
+    @ResponseBody
+    public String orderSplit(HttpServletRequest request){
+        String orderId = request.getParameter("orderId");
+        String wareSkuMap = request.getParameter("wareSkuMap");
+
+        //定义订单集合
+        List<OrderInfo> orderInfoList = orderService.spiltOrder(orderId,wareSkuMap);
+
+        List<Map> mapList = new ArrayList<>();
+
+        for (OrderInfo orderInfo : orderInfoList) {
+            Map map = orderService.initWareOrder(orderInfo);
+
+            mapList.add(map);
+        }
+        return JSON.toJSONString(mapList);
     }
 }

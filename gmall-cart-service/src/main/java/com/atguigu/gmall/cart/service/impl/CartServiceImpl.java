@@ -165,7 +165,8 @@ public class CartServiceImpl implements CartService {
                         if (info.getIsChecked().equals("1")) {
                             cartInfo.setIsChecked(info.getIsChecked());
 
-                            //更新redis中isChecked状态checkCart(cartInfo.getSkuId(), info.getIsChecked(), userId);
+                            //更新redis中isChecked状态
+                            checkCart(cartInfo.getSkuId(), info.getIsChecked(), userId);
                         }
                     }
                 }

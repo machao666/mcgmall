@@ -14,11 +14,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jms.annotation.JmsListener;
 import org.springframework.jms.core.JmsTemplate;
 import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Propagation;
-import org.springframework.transaction.annotation.Transactional;
 
 import javax.jms.JMSException;
-import javax.jms.MapMessage;
 import javax.jms.TextMessage;
 import java.util.*;
 
@@ -26,7 +23,7 @@ import java.util.*;
  * @param
  * @return
  */
-
+@Component
 public class WareConsumer {
 
 
